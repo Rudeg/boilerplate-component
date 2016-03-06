@@ -37,7 +37,7 @@ var Main = function () {
     babelHelpers.classCallCheck(this, Main);
 
     this.cacl = function (a, b) {
-      return a + b;
+      return a + b + 1;
     };
   }
 
