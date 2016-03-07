@@ -10,6 +10,8 @@ const stylus = require('gulp-stylus')
 const connect = require('gulp-connect')
 const bump = require('gulp-bump')
 const git = require('gulp-git')
+const conventionalGithubReleaser = require('conventional-github-releaser')
+
 
 // Configs for all tasks
 // Comments are just examples how to add posible configurations to the tasks
