@@ -15,7 +15,6 @@ const conventionalGithubReleaser = require('conventional-github-releaser')
 
 // Configs for all tasks
 // Comments are just examples how to add posible configurations to the tasks
-
 const rollupConf = {
   entry: 'src/index.js',
   plugins: [
@@ -59,7 +58,6 @@ gulp.task('watch', () => {
   gulp.watch('style/*.styl', ['style'])
 })
 
-
 // Tasks for the github release
 gulp.task('bump-ver', () => {
   const options = { type: util.env.type || 'patch' }
@@ -68,13 +66,16 @@ gulp.task('bump-ver', () => {
     .pipe(gulp.dest('./'))
 })
 
+//git commit task
 gulp.task('commit-changes', () => gulp.src('.')
   .pipe(git.add())
   .pipe(git.commit('Bumped version number'))
 )
 
+//git push taks
 gulp.task('push-changes', cb => git.push('origin', 'master', cb))
 
+//git create new tag task
 gulp.task('create-new-tag', cb => {
   const version = JSON.parse(fs.readFileSync('./package.json', 'utf8')).version
   git.tag(version, 'Created Tag for version: ' + version, error => {
@@ -83,11 +84,12 @@ gulp.task('create-new-tag', cb => {
   })
 })
 
+//github release task
 gulp.task('github-release', done => {
   conventionalGithubReleaser({
     type: 'oauth',
     token: process.env.OAUTH // change this to your own GitHub token or use an environment variable
-  }, { preset: 'angular' }, done)
+  }, {}, done)
 })
 
 gulp.task('release', callback => {

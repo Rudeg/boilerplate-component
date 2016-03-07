@@ -37,8 +37,10 @@
     "es6",
     "boilerplate",
     "module",
+    "rollup",
     "module-boilerplate",
     "js-boilerplate",
+    "rollup-boilerplate",
     "es6-boilerplate"
   ]
 }
