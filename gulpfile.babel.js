@@ -1,10 +1,14 @@
 const gulp = require('gulp')
+const runSequence = require('run-sequence')
+const util = require('gulp-util')
 const rollup = require('rollup').rollup
 const commonjs = require('rollup-plugin-commonjs')
 const babel = require('rollup-plugin-babel')
 const nodeResolve = require('rollup-plugin-node-resolve')
 const stylus = require('gulp-stylus')
 const connect = require('gulp-connect')
+const bump = require('gulp-bump')
+const git = require('gulp-git')
 
 // Configs for all tasks
 // Comments are just examples how to add posible configurations to the tasks
@@ -52,5 +56,50 @@ gulp.task('watch', () => {
   gulp.watch('style/*.styl', ['style'])
 })
 
+gulp.task('bump-ver', () => {
+  const options = { type: util.env.type || 'patch' }
+  gulp.src('./package.json')
+    .pipe(bump(options)).on('error', util.log)
+    .pipe(gulp.dest('./'))
+})
+
+gulp.task('commit-changes', () => gulp.src('.')
+  .pipe(git.add())
+  .pipe(git.commit('[Prerelease] Bumped version number'))
+)
+
+gulp.task('push-changes', cb => git.push('origin', 'master', cb))
+
+gulp.task('create-new-tag', cb => {
+  const version = JSON.parse(fs.readFileSync('./package.json', 'utf8')).version
+  git.tag(version, 'Created Tag for version: ' + version, error => {
+    if (error) return cb(error)
+    git.push('origin', 'master', { args: '--tags' }, cb)
+  })
+})
+
+gulp.task('github-release', done => {
+  conventionalGithubReleaser({
+    type: 'oauth',
+    token: process.env.OAUTH // change this to your own GitHub token or use an environment variable
+  }, { preset: 'angular' }, done)
+})
+
+gulp.task('release', callback => {
+  runSequence(
+    'bump-ver',
+    'commit-changes',
+    'push-changes',
+    'create-new-tag',
+    'github-release',
+    error => {
+      if (error) {
+        console.log(error.message)
+      } else {
+        console.log('Release done')
+      }
+      callback(error)
+    })
+})
 
 gulp.task('default', ['watch'])
