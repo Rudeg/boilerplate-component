@@ -1,4 +1,5 @@
 const gulp = require('gulp')
+const fs = require('fs')
 const runSequence = require('run-sequence')
 const util = require('gulp-util')
 const rollup = require('rollup').rollup
@@ -56,6 +57,8 @@ gulp.task('watch', () => {
   gulp.watch('style/*.styl', ['style'])
 })
 
+
+// Tasks for the github release
 gulp.task('bump-ver', () => {
   const options = { type: util.env.type || 'patch' }
   gulp.src('./package.json')
@@ -65,7 +68,7 @@ gulp.task('bump-ver', () => {
 
 gulp.task('commit-changes', () => gulp.src('.')
   .pipe(git.add())
-  .pipe(git.commit('[Prerelease] Bumped version number'))
+  .pipe(git.commit('Bumped version number'))
 )
 
 gulp.task('push-changes', cb => git.push('origin', 'master', cb))
