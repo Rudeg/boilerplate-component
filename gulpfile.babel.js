@@ -1,4 +1,5 @@
 const gulp = require('gulp')
+const del = require('del')
 const fs = require('fs')
 const runSequence = require('run-sequence')
 const util = require('gulp-util')
@@ -45,13 +46,15 @@ const exampleServConf = {
   port: 8080,
   livereload: true
 }
-gulp.task('server:example', () => connect.server(devServConf))
+gulp.task('server:example', () => connect.server(exampleServConf))
+gulp.task('reload-js', () => gulp.src('dist/*.js').pipe(connect.reload()))
 
 gulp.task('build:iife', () => rollup(rollupConf).then((bundle) => bundle.write(iifeBundleConf)))
 gulp.task('build:cjs', () => rollup(rollupConf).then((bundle) => bundle.write(cjsBundleConf)))
 gulp.task('style', () => gulp.src('style/*.styl').pipe(stylus()).pipe(gulp.dest('dist')))
 gulp.task('style:min', () => gulp.src('style/*.styl').pipe(stylus({ compress: true })).pipe(gulp.dest('dist')))
 gulp.task('build', ['build:cjs', 'build:iife', 'style:min'])
+gulp.task('clean', () => del(['dist']) )
 
 gulp.task('watch', () => {
   gulp.watch('src/*.js', ['build:iife', 'build:cjs'])
@@ -109,4 +112,4 @@ gulp.task('release', callback => {
     })
 })
 
-gulp.task('default', ['watch'])
+gulp.task('default', ['clean', 'watch'])
