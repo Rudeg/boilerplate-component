@@ -5,7 +5,11 @@ Simple boilerplate for JavaScript component.
 ## The Stack
 
 ✔ [Gulp](http://gulpjs.com/) - tasks
+
+
 ✔ [Babel](https://babeljs.io/) - transform ES6 to ES6
+
+
 ✔ [Rollup](https://github.com/rollup/rollup) - bundling
 
 ##Structure
