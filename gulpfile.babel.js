@@ -1,3 +1,4 @@
+require('dotenv').config()
 const gulp = require('gulp')
 const del = require('del')
 const fs = require('fs')
